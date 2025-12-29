@@ -1,46 +1,26 @@
+import random
+
 import streamlit as st
 
+from components.file_uploader import show_file_uploader
 from components.footer import show_footer_badge
+from components.frame import draw_frame
 
 app_title = 'Sorting Visualizer'
-st.set_page_config(page_title=app_title, page_icon=":brain:", initial_sidebar_state="expanded")
+st.set_page_config(page_title=app_title, page_icon=":el_salvador:", initial_sidebar_state="expanded")
 
 # -- Sidebar
 st.sidebar.title('Sorting Algorithms Visualizer')
-algorithm_type = st.sidebar.selectbox("", ("", "Bubble Sort", "Quick Sort", "Merge Sort"))
-n = st.sidebar.slider("N elements", 5, 300, 40)
+algorithm_type = st.sidebar.selectbox("", ("-", "Bubble Sort", "Quick Sort", "Merge Sort"),
+                                      placeholder="Select Algorithm")
+n = st.sidebar.slider("N elements", 5, 150, 40)
 fps = st.sidebar.slider("Speed ", 1, 30, 12)
 st.sidebar.button("🎲 Random Seed")
 
-# col1, col2, col3 = st.columns(3)
-# with col1:
-#     st.button("▶ Play")
-# with col2:
-#     st.button("⏸ Pause")
-# with col3:
-#     st.button("⟲ Reset")
-
-st.markdown(
-    """
-    <style>
-    .stFileUploader  {
-        position: fixed;
-        bottom: 10px;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
-
-uploaded_file = st.sidebar.file_uploader(
-    "Upload a .txt file with numbers separated by spaces or commas:",
-    type=["txt"],
-    accept_multiple_files=False,
-    label_visibility="collapsed"
-)
+show_file_uploader()
 
 # -- Main page
-if not algorithm_type:
+if algorithm_type == "-":
     st.title("🌀 Sorting Algorithms Visualizer")
     st.subheader("Learn how sorting algorithms work through interactive visualizations.")
 
@@ -82,5 +62,14 @@ if not algorithm_type:
         )
 else:
     st.title(algorithm_type)
+    rand_list = random.sample(range(1, n + 1), n)
+    draw_frame(rand_list)
+    left, middle, right = st.columns(3)
+    if left.button("Play", icon=":material/play_arrow:", width="stretch", type="primary"):
+        left.markdown("You clicked the plain button.")
+    if middle.button("Pause", icon=":material/stop:", width="stretch"):
+        middle.markdown("You clicked the emoji button.")
+    if right.button("Replay", icon=":material/replay:", width="stretch"):
+        right.markdown("You clicked the Material button.")
 
 show_footer_badge("Aleksandra Włoch")

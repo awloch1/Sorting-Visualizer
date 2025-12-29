@@ -2,12 +2,11 @@ import streamlit as st
 
 
 def show_footer_badge(author: str):
-    """Displays a floating footer badge in the bottom-right corner."""
     st.markdown(
         f"""
         <style>
         .custom-badge {{
-            background:  #b30000; 
+            background:  #ff4b4b; 
             position: fixed;
             right: 20px;
             bottom: 20px;
