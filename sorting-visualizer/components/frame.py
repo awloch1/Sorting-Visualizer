@@ -1,18 +1,42 @@
-import plotly.graph_objects as go
-import streamlit as st
+import json
+from pathlib import Path
+
+import streamlit.components.v1 as components
 
 
-def draw_frame(rand_list):
-    fig = go.Figure(data=[
-        go.Bar(x=list(range(len(rand_list))), y=rand_list, ),
+def _compute_highlights(frames):
+    highlights = []
+    prev = None
+    for arr in frames:
+        if prev is None:
+            highlights.append([])
+        else:
+            changed = [i for i, (a, b) in enumerate(zip(prev, arr)) if a != b]
+            highlights.append(changed[:4])
+        prev = arr
+    return highlights
 
-    ], layout=dict(
-        barcornerradius=5,
-    ), )
-    fig.update_layout(
-        template="plotly_white",
-        margin=dict(l=10, r=10, t=10, b=10),
-        xaxis_title="Index",
-        yaxis_title="Value",
+
+def draw_frames(initial, frames, fps=12):
+    base_dir = Path(__file__).parent / "bar-component"
+    html_tpl = (base_dir / "bar-component.html").read_text(encoding="utf-8")
+    css = (base_dir / "bar-component.css").read_text()
+    js = (base_dir / "bar-component.js").read_text()
+
+    highlights = _compute_highlights(frames)
+
+    payload = {
+        "initial": initial,
+        "frames": frames,
+        "highlights": highlights,
+        "fps": fps,
+    }
+
+    html = (
+        html_tpl
+        .replace("/*__CSS__*/", css)
+        .replace("/*__JS__*/", js)
+        .replace("__DATA__", json.dumps(payload))
     )
-    st.plotly_chart(fig, use_container_width=True)
+
+    components.html(html, height=560, scrolling=False)
