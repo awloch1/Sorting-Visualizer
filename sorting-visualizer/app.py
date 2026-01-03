@@ -17,7 +17,7 @@ algorithm_type = st.sidebar.selectbox(
     ("-", *ALGORITHMS.keys())
 )
 
-n = st.sidebar.slider("N elements", 5, 70, 40)
+n = st.sidebar.slider("N elements", 5, 70, 20)
 fps = st.sidebar.slider("Speed ", 1, 30, 12)
 st.sidebar.button("🎲 Random Seed")
 

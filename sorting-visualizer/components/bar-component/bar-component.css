@@ -17,6 +17,8 @@
 
   --hot: #ff4d4d;
   --hotKeep: #ff4d4d;
+
+  --compare: #ffd166;
 }
 
 html,body{margin:0;background:transparent;font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif;}
@@ -64,32 +66,44 @@ html,body{margin:0;background:transparent;font-family:system-ui,-apple-system,Se
 .meta{color:var(--muted);font-size:13px}
 
 .chart{
-  height: 470px;
+  height: 450px;
   border-radius: 14px;
   border: 1px solid var(--border);
   background: rgba(10,14,22,.55);
   padding: 14px 14px 18px;
-  display:flex;
-  gap: 4px;
-  align-items:flex-end;
-  overflow:hidden;
+  position: relative;
+  overflow: hidden;
 }
 
+.chart{ position: relative; overflow: hidden; }
+
+.chartInner{
+  position: relative;
+  height: 100%;
+  width: 100%;
+}
+
+
 .bar{
-  position:relative;
-  flex: 1 1 0;
-  min-width: 6px;
+  position:absolute;
+  bottom: 18px;
+  width: var(--barW, 10px);
   border-radius: 8px 8px 4px 4px;
   background: linear-gradient(180deg, var(--bar) 0%, var(--bar2) 100%);
-   transition:
-    height .16s ease,
+  transition:
+    transform .18s ease,
+    height .18s ease,
     filter .22s ease,
-    transform .10s ease,
     background-color .22s ease;
+  will-change: transform, height;
+}
+
+.bar.compare{
+  background: var(--compare);
 }
 
 .bar.hot{
-  transition-delay: 40ms;
+  transition-delay: 0ms;
   background: var(--hotKeep);
 }
 
