@@ -12,9 +12,12 @@ st.set_page_config(page_title=app_title, page_icon=":el_salvador:", initial_side
 
 # -- Sidebar
 st.sidebar.title('Sorting Algorithms Visualizer')
-algorithm_type = st.sidebar.selectbox("", ("-", *ALGORITHMS.keys()),
-                                      placeholder="Select Algorithm")
-n = st.sidebar.slider("N elements", 5, 150, 40)
+algorithm_type = st.sidebar.selectbox(
+    "Select Algorithm",
+    ("-", *ALGORITHMS.keys())
+)
+
+n = st.sidebar.slider("N elements", 5, 70, 40)
 fps = st.sidebar.slider("Speed ", 1, 30, 12)
 st.sidebar.button("🎲 Random Seed")
 
