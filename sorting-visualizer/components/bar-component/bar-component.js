@@ -117,8 +117,10 @@ function setFrame(idx){
   const f = frames[idx];
 
   const hot = new Set(f.hot || []);
+  const pivot = f.pivot;
   for (const it of items){
     it.el.classList.toggle("hot", hot.has(it.pos));
+    it.el.classList.toggle("pivot", pivot === it.pos);
   }
 
   const newPosById = new Map();

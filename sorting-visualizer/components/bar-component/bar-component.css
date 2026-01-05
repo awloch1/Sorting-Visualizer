@@ -18,7 +18,7 @@
   --hot: #ff4d4d;
   --hotKeep: #ff4d4d;
 
-  --compare: #ffd166;
+  --pivot: #ffd166;
 }
 
 html,body{margin:0;background:transparent;font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif;}
@@ -98,8 +98,8 @@ html,body{margin:0;background:transparent;font-family:system-ui,-apple-system,Se
   will-change: transform, height;
 }
 
-.bar.compare{
-  background: var(--compare);
+.bar.pivot{
+  background: var(--pivot) !important;
 }
 
 .bar.hot{

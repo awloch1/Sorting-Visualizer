@@ -84,12 +84,53 @@ class SortingAlgorithms:
 
             yield {"order": snapshot_order(bars), "hot": [i, j]}
 
+    @staticmethod
+    def quick_sort(data):
+        bars = [Bar(i, v) for i, v in enumerate(data)]
+
+        def qs(lo, hi):
+            if lo >= hi:
+                return
+
+            pivot_pos = (lo + hi) // 2
+            pivot_val = bars[pivot_pos].value
+
+            i, j = lo, hi
+
+            while i <= j:
+                while bars[i].value < pivot_val:
+                    yield {"order": snapshot_order(bars), "hot": [i], "pivot": pivot_pos}
+                    i += 1
+
+                while bars[j].value > pivot_val:
+                    yield {"order": snapshot_order(bars), "hot": [j], "pivot": pivot_pos}
+                    j -= 1
+
+                if i <= j:
+                    yield {"order": snapshot_order(bars), "hot": [i, j], "pivot": pivot_pos}
+                    bars[i], bars[j] = bars[j], bars[i]
+                    yield {"order": snapshot_order(bars), "hot": [i, j], "pivot": pivot_pos}
+
+                    if pivot_pos == i:
+                        pivot_pos = j
+                    elif pivot_pos == j:
+                        pivot_pos = i
+
+                    i += 1
+                    j -= 1
+
+            if lo < j:
+                yield from qs(lo, j)
+            if i < hi:
+                yield from qs(i, hi)
+
+        yield from qs(0, len(bars) - 1)
+        yield {"order": snapshot_order(bars), "hot": [], "pivot": None}
+
 
 ALGORITHMS = {
     "Bubble Sort": SortingAlgorithms.bubble_sort,
     "Selection Sort": SortingAlgorithms.selection_sort,
     "Insertion Sort": SortingAlgorithms.insertion_sort,
+    "Quick Sort": SortingAlgorithms.quick_sort,
 }
-
-for step in SortingAlgorithms.insertion_sort([4, 5, 6, 2, 5, 7]):
-    print(step)
