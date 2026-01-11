@@ -12,13 +12,6 @@ def snapshot_order(bars: List[Bar]) -> List[int]:
     return [b.id for b in bars]
 
 
-def snapshot_values_by_id(bars: List[Bar], n: int) -> List[int]:
-    out = [0] * n
-    for b in bars:
-        out[b.id] = b.value
-    return out
-
-
 class SortingAlgorithms:
     @staticmethod
     def sort(algorithm_type, data):

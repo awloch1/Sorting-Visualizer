@@ -23,6 +23,47 @@ let slotW = 0;
 let barW = 0;
 let gap = 6;
 
+let elapsedMs = 0;
+let lastTime = null;
+
+
+const timeEl = document.getElementById("time");
+
+function renderTime(){
+  if (!timeEl) return;
+
+  const s = Math.floor(elapsedMs / 1000);
+  const ms = Math.floor((elapsedMs % 1000) / 10);
+
+  timeEl.textContent = `Time: ${s}.${ms.toString().padStart(2, "0")} s`;
+}
+
+function tick(ts){
+  if (!playing) return;
+
+  if (lastTime != null) {
+    elapsedMs += ts - lastTime;
+  }
+  lastTime = ts;
+
+  const interval = 1000 / fps;
+  if (ts - lastTick >= interval){
+    lastTick = ts;
+
+    if (i >= frames.length){
+      playing = false;
+      lastTime = null;
+      return;
+    }
+    setFrame(i);
+    i++;
+  }
+
+  renderTime();
+  rafId = requestAnimationFrame(tick);
+}
+
+
 function h(val){
   return Math.max(2, Math.round((val / maxVal) * pxHeight));
 }
@@ -83,6 +124,8 @@ function renderInitial(){
 
   meta.textContent = `0 / ${frames.length}`;
   i = 0;
+
+  renderTime();
 }
 
 function applyPositions(newPosById){
@@ -132,23 +175,6 @@ function setFrame(idx){
   meta.textContent = `${idx+1} / ${frames.length}`;
 }
 
-function tick(ts){
-  if (!playing) return;
-
-  const interval = 1000 / fps;
-  if (ts - lastTick >= interval){
-    lastTick = ts;
-
-    if (i >= frames.length){
-      playing = false;
-      return;
-    }
-    setFrame(i);
-    i++;
-  }
-  rafId = requestAnimationFrame(tick);
-}
-
 btnPlay.addEventListener("click", () => {
   if (playing) return;
   playing = true;
@@ -158,6 +184,7 @@ btnPlay.addEventListener("click", () => {
 
 btnPause.addEventListener("click", () => {
   playing = false;
+  lastTime = null;
   if (rafId) cancelAnimationFrame(rafId);
   rafId = null;
 });
@@ -166,7 +193,11 @@ btnReplay.addEventListener("click", () => {
   playing = false;
   if (rafId) cancelAnimationFrame(rafId);
   rafId = null;
+  elapsedMs = 0;
+  lastTime = null;
+
   renderInitial();
+  renderTime();
 });
 
 window.addEventListener("resize", () => {

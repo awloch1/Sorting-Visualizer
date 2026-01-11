@@ -65,6 +65,13 @@ html,body{margin:0;background:transparent;font-family:system-ui,-apple-system,Se
 .spacer{flex:1}
 .meta{color:var(--muted);font-size:13px}
 
+.meta-row{
+  display:flex;
+  gap:16px;
+  margin-top:8px;
+  justify-content: space-between;
+}
+
 .chart{
   height: 450px;
   border-radius: 14px;

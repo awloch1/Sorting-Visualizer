@@ -39,4 +39,4 @@ def draw_frames(initial, frames, fps=12):
         .replace("__DATA__", json.dumps(payload))
     )
 
-    components.html(html, height=560, scrolling=False)
+    components.html(html, height=660, scrolling=False)
