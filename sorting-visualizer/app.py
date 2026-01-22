@@ -10,6 +10,14 @@ from sorting_algorithms import ALGORITHMS, SortingAlgorithms
 app_title = 'Sorting Visualizer'
 st.set_page_config(page_title=app_title, page_icon=":el_salvador:", initial_sidebar_state="expanded")
 
+# -- Sessions
+if "data" not in st.session_state:
+    st.session_state.data = None
+if "rand_list" not in st.session_state:
+    st.session_state.rand_list = None
+if "last_n" not in st.session_state:
+    st.session_state.last_n = None
+
 # -- Sidebar
 st.sidebar.title('Sorting Algorithms Visualizer')
 algorithm_type = st.sidebar.selectbox(
@@ -17,9 +25,12 @@ algorithm_type = st.sidebar.selectbox(
     ("-", *ALGORITHMS.keys())
 )
 
-n = st.sidebar.slider("N elements", 5, 70, 20)
+n = st.sidebar.slider("N elements", 5, 70, 20, key="n")
 fps = st.sidebar.slider("Speed ", 1, 30, 12)
-st.sidebar.button("🎲 Random Seed")
+
+if st.sidebar.button("🎲 Random Seed"):
+    st.session_state.rand_list = random.sample(range(1, n + 1), n)
+    st.session_state.last_n = n
 
 show_file_uploader()
 
@@ -58,7 +69,7 @@ if algorithm_type == "-":
             1️⃣ Select a **sorting algorithm** from the sidebar on the left.  
             2️⃣ Adjust the **number of elements**, **animation speed (FPS)**, and optional **random seed**.  
             3️⃣ Click **▶ Play** to start the visualization.  
-            4️⃣ Use **⏸ Pause**, **⏭ Step**, or **⟲ Reset** to control the animation.  
+            4️⃣ Use **⏸ Pause**, or **⟲ Reset** to control the animation.  
 
             💡 *Tip:*  
             Watch how compared elements are highlighted and how bars rearrange over time.
@@ -66,7 +77,15 @@ if algorithm_type == "-":
         )
 else:
     st.title(algorithm_type)
-    rand_list = random.sample(range(1, n + 1), n)
+    data_source = st.session_state.get("data_source")
+
+    if st.session_state.get("data_source") != "file":
+        if st.session_state.rand_list is None or st.session_state.last_n != n:
+            st.session_state.rand_list = random.sample(range(1, n + 1), n)
+            st.session_state.last_n = n
+
+    rand_list = st.session_state.rand_list[:]
+
     left, middle, right = st.columns(3)
     frames = []
     initial = rand_list[:]
